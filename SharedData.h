@@ -34,6 +34,11 @@ struct SharedData {
 	sem_t unusedSlots;
 	sem_t lastItem;
 
+	// semaphores for unqiue thread attributes and total number of items produced
+	sem_t consumeType;
+	sem_t produceType;
+	sem_t totalItemsProduced;
+
 	//Parameters for the options in the main
 	int numRequests;
 	int xConsumeTime;
@@ -45,8 +50,6 @@ struct SharedData {
 	unsigned int produced[RequestTypeN];
 	unsigned int inRequestQueue[RequestTypeN];
 	
-	
-	/// TODO : initialize all the ints in main and set it 0
 	//keeps track of the number of items consumes
 	unsigned int consumed[ConsumerTypeN][RequestTypeN];
 	int consumedItems;
@@ -57,14 +60,10 @@ struct SharedData {
 	bool isBitcoin;
 	bool isBlockChainX;
 
-	//shared buffer for the queue????
+	//shared buffer for the queue
 	std::queue<RequestType> broker;
 
-	// semaphores for unqiue thread attributes
-	sem_t consumeType;
-	sem_t produceType;
+	
 
-	// Semaphore for total number of items produced
-	sem_t totalItemsProduced;
 };
 #endif //A4_SHAREDDATA_H

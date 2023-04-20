@@ -9,16 +9,17 @@
 //Make one void consumer function for both of them 
 void *consumer(void *voidptr) {
 
- 	//open the file
+ 	//open the sharedData file
     auto *sharedData = (SharedData *) voidptr;
 
+	//get the unique consumer type
 	ConsumerType consumer;
 
 	//if the consumer is a blockChainX, set the consumer to blockChainX
 	if (sharedData->isBlockChainX) {
 		consumer = BlockchainX;
 	}
-	//else if the consumer is a blockChainY, set the consumer to blockChainY
+	//else the consumer is a blockChainY, set the consumer to blockChainY
 	else{
 		consumer = BlockchainY;
 	}
@@ -32,8 +33,6 @@ void *consumer(void *voidptr) {
 	//create a bounded buffer in the consumer
 	
     while (true) {
-
-		// TODO: Break out of the loop condition: All items have been consumed
 		// Have an int in the shared Data that keeps track of the number of items consumed
 		//all items have been consumed and use consumeditems
 		if (sharedData->consumedItems >= sharedData->numRequests) {
@@ -80,7 +79,7 @@ void *consumer(void *voidptr) {
 		else {
 			usleep(sharedData->yConsumeTime * MILLISECONDS);
 		}
-}
+	}
 		//uses the precedence constraint
 		sem_post(&sharedData->lastItem);
 

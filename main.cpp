@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 
 			break;
 		
-	}
+		}
 	}
 
 	//initializing all the ints in the shared data
@@ -114,9 +114,10 @@ int main(int argc, char *argv[]) {
 	//Create a thread for the consumer named blockChainX and blockChainY
 	pthread_t consumerBlockChainX, consumerBlockChainY;
 
-	//Creat a thread for bitcoin and ethereum
+	//Creat a thread for producer bitcoin and producer ethereum
 	pthread_t producerBitcoin, producerEthereum;
 
+	// Set the isBitcoin and blockChainX flag to true
 	sharedData.isBitcoin = true;
 	sharedData.isBlockChainX = true;
 

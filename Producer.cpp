@@ -9,7 +9,7 @@
 //Make void producer function for both of them 
 void *producer(void *voidptr) {
 
-	//open the file
+	//open the sharedData file
     auto *sharedData = (SharedData *) voidptr;
 
 	// get the unique request type
@@ -32,7 +32,6 @@ void *producer(void *voidptr) {
 		// wait on the totalItemsProduced
 		sem_wait(&sharedData->totalItemsProduced);
 
-		// TODO: Break out of the loop condition: All items have been produced
 		// Have an int in the shared Data that keeps track of the number of items produced
 		if(sharedData->producedItems >= sharedData->numRequests){
 			break;
