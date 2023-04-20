@@ -6,9 +6,7 @@
 #define A4_PRODUCER_H
 
 
-class Producer {
-
-};
+void *producer(void *voidptr);
 
 
 #endif //A4_PRODUCER_H

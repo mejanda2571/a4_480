@@ -3,3 +3,87 @@
 //
 
 #include "Consumer.h"
+#include "SharedData.h"
+#include "log.h"
+
+
+//Make one void consumer function for both of them 
+void *consumer(void *voidptr) {
+
+ 	//open the file
+    auto *sharedData = (SharedData *) voidptr;
+
+	ConsumerType consumer;
+
+	//if the consumer is a blockChainX, set the consumer to blockChainX
+	if (sharedData->isBlockChainX) {
+		consumer = BlockchainX;
+	}
+	//else if the consumer is a blockChainY, set the consumer to blockChainY
+	else{
+		consumer = BlockchainY;
+	}
+
+	// Signal the main that the consumer type is set
+	sem_post(&sharedData->consumeType);
+	
+	// Hold the item
+	RequestType item;
+
+	//create a bounded buffer in the consumer
+	
+    while (true) {
+
+		// TODO: Break out of the loop condition: All items have been consumed
+		// Have an int in the shared Data that keeps track of the number of items consumed
+		//all items have been consumed and use consumeditems
+		if (sharedData->consumedItems >= sharedData->numRequests) {
+			break;
+		}
+
+		// Wait for something there to consume
+		sem_wait(&sharedData->usedSlots);
+
+		//mutex signal down
+		sem_wait(&sharedData->queueMutexSemaphore);
+		
+		//item buffer remove
+		item = sharedData->broker.front();
+		sharedData->broker.pop();
+
+		sharedData->consumed[consumer][item]++;
+		
+		//increment the number of items consumed
+		sharedData->consumedItems++;
+
+		//decrement the number of items in the queue
+		sharedData->inRequestQueue[item]--;
+		
+		// use the log request removed function
+		log_request_removed(consumer, item, sharedData->consumed[consumer], sharedData->inRequestQueue);
+
+		//mutex signal up 	
+		sem_post(&sharedData->queueMutexSemaphore);
+
+		// Signal there is one less item in the queue
+		sem_post(&sharedData->unusedSlots);
+
+		// If the item was bitcoin signal it
+		if (item == Bitcoin) {
+			sem_post(&sharedData->bitcoinMutexSemaphore);
+		}
+
+		// Sleep for the consumer's consume time
+		if (consumer == BlockchainX) {
+
+			usleep(sharedData->xConsumeTime * 1000);
+		}
+		else {
+			usleep(sharedData->yConsumeTime * 1000);
+		}
+}
+		//uses the precedence constraint
+		sem_post(&sharedData->lastItem);
+
+		return nullptr;
+}

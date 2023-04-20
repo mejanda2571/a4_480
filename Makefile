@@ -6,30 +6,33 @@ CC=g++
 CCFLAGS=-std=c++11 -Wall -g3 -c
 
 # object files
-OBJS = main.o Consumer.o Producer.o
+OBJS = main.o Consumer.o Producer.o log.o
 
 # Program name
 PROGRAM = cryptoexc
 
 # make all is the default target
-all : $(PROGRAM) main.o Consumer.o Producer.o
+all : $(PROGRAM) main.o Consumer.o Producer.o log.o
 
 # The program depends upon its object files
 $(PROGRAM) : $(OBJS)
-    $(CC) -pthread -o $(PROGRAM) $(OBJS)
+	$(CC) -pthread -o $(PROGRAM) $(OBJS)
 
 main.o : main.cpp
-    $(CC) $(CCFLAGS) main.cpp
+	$(CC) $(CCFLAGS) main.cpp        
 
 Consumer.o : Consumer.cpp
-    $(CC) $(CCFLAGS) Consumer.cpp
+	$(CC) $(CCFLAGS) Consumer.cpp
 
 Producer.o : Producer.cpp
-    $(CC) $(CCFLAGS) Producer.cpp
+	$(CC) $(CCFLAGS) Producer.cpp
+
+log.o : log.c
+	$(CC) $(CCFLAGS) log.c
 
 # Once things work, people frequently delete their object files.
 # If you use "make clean", this will do it for you.
 # As we use gnuemacs which leaves auto save files termintating
 # with ~, we will delete those as well.
 clean :
-    rm -f *.o *~ $(PROGRAM)
+	rm -f *.o *~ $(PROGRAM)

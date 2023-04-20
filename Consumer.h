@@ -5,10 +5,6 @@
 #ifndef A4_CONSUMER_H
 #define A4_CONSUMER_H
 
-
-class Consumer {
-
-};
-
+void *consumer(void *voidptr);
 
 #endif //A4_CONSUMER_H
