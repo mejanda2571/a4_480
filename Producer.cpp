@@ -6,9 +6,6 @@
 #include "SharedData.h"
 #include "log.h"
 
-#define BitcoinIs 0
-#define EthereumIs 1
-
 //Make void producer function for both of them 
 void *producer(void *voidptr) {
 
@@ -37,21 +34,17 @@ void *producer(void *voidptr) {
 
 		// TODO: Break out of the loop condition: All items have been produced
 		// Have an int in the shared Data that keeps track of the number of items produced
-
 		if(sharedData->producedItems >= sharedData->numRequests){
 			break;
 		}
-	
 		// if bitcoin, sleep for the bitcoin producing time
 		if (request == Bitcoin) {
-			usleep(sharedData->bitProducingTime * 1000);
+			usleep(sharedData->bitProducingTime * MILLISECONDS);
 		}
-
 		// else if ethereum, sleep for the ethereum producing time
 		else {
-			usleep(sharedData->ethProducingTime * 1000);
+			usleep(sharedData->ethProducingTime * MILLISECONDS);
 		}
-
 		// wait on the bitcoinMutexSemaphore if the request is bitcoin
 		if (request == Bitcoin) {
 			sem_wait(&sharedData->bitcoinMutexSemaphore);

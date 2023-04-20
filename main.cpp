@@ -32,14 +32,14 @@ int main(int argc, char *argv[]) {
 			//Total number of trade requests to be generated
 			case 'r':
 				numParse = atoi(optarg);
-				if (numParse > 0) {
+				if (numParse >= 0) {
 					sharedData.numRequests = numParse;
 				}
 				break;
 			//Specifies the number of milliseconds N that the consumer using Blockchain X
 			case 'x':
 			numParse = atoi(optarg);
-			if (numParse > 0) {
+			if (numParse >= 0) {
 				sharedData.xConsumeTime = numParse;
 			}
 			break;
@@ -47,17 +47,15 @@ int main(int argc, char *argv[]) {
 			//Specifies the number of milliseconds N that the consumer using Blockchain Y
 			case 'y':
 			numParse = atoi(optarg);
-			if (numParse > 0) {
+			if (numParse >= 0) {
 				sharedData.yConsumeTime = numParse;
 			}
 			break;
 			
-		
-
 			//Specifies the number of milliseconds N that the producer for Bitcoin
 			case 'b':
 				numParse = atoi(optarg);
-				if (numParse > 0) {
+				if (numParse >= 0) {
 					sharedData.bitProducingTime = numParse;
 				}
 			
@@ -66,7 +64,7 @@ int main(int argc, char *argv[]) {
 			//Specifies the number of milliseconds N that the producer for Ethereum
 			case 'e':
 				numParse = atoi(optarg);
-				if (numParse > 0) {
+				if (numParse >= 0) {
 					sharedData.ethProducingTime = numParse;
 				}
 
@@ -81,16 +79,17 @@ int main(int argc, char *argv[]) {
 	sharedData.totalItems = 0;
 
 	// Init the shared data fields
-	sharedData.produced[0] = 0;
-	sharedData.produced[1] = 0;
+	sharedData.produced[Bitcoin] = 0;
+	sharedData.produced[Ethereum] = 0;
 
-	sharedData.inRequestQueue[0] = 0;
-	sharedData.inRequestQueue[1] = 0;
+	sharedData.inRequestQueue[BITCOIN] = 0;
+	sharedData.inRequestQueue[ETHEREUM] = 0;
 
-	sharedData.consumed[0][0] = 0;
-	sharedData.consumed[0][1] = 0;
-	sharedData.consumed[1][0] = 0;
-	sharedData.consumed[1][1] = 0;
+	//bitcoin is 0 and ethereum is 1
+	sharedData.consumed[BITCOIN][BITCOIN] = 0;
+	sharedData.consumed[BITCOIN][ETHEREUM] = 0;
+	sharedData.consumed[ETHEREUM][BITCOIN] = 0;
+	sharedData.consumed[ETHEREUM][ETHEREUM] = 0;
 
 	// Init the queue
 	sharedData.broker = std::queue<RequestType>();
@@ -98,11 +97,11 @@ int main(int argc, char *argv[]) {
 	// 1 is for queue since there is only 1 queue to access, for other things like queue size you want something like 0 or 16 or 5
 	sem_init(&sharedData.queueMutexSemaphore, 0, 1);
 
-	sem_init(&sharedData.bitcoinMutexSemaphore, 0, 5);
+	sem_init(&sharedData.bitcoinMutexSemaphore, 0, MAX_BITCOIN);
 
 	sem_init(&sharedData.usedSlots, 0, 0);
 
-	sem_init(&sharedData.unusedSlots, 0, 16);
+	sem_init(&sharedData.unusedSlots, 0, MAX_QUEUE_SIZE);
 
 	sem_init(&sharedData.lastItem, 0, 0);
 
@@ -149,11 +148,17 @@ int main(int argc, char *argv[]) {
 	sem_wait(&sharedData.lastItem);
 
 	// Convert arr[2][2] into *arr[2]
-	unsigned int *arr[2];
-	arr[0] = sharedData.consumed[0];
-	arr[1] = sharedData.consumed[1];
+	unsigned int *arr[RequestTypeN];
+	arr[0] = sharedData.consumed[BITCOIN];
+	arr[1] = sharedData.consumed[ETHEREUM];
 
 
 	log_production_history(sharedData.produced, arr);
+
+
+	// TO DO: REMOVE MAGIC NUMBERS MAKE THEM INTO #DEFINES
+	// Remove any commented out code
+	// Add comments to the code
+	// For the arrays, instead of 0 and 1 have Bitcoin or Ethereum, check the crypto.h file
 	
 }

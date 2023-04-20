@@ -6,7 +6,6 @@
 #include "SharedData.h"
 #include "log.h"
 
-
 //Make one void consumer function for both of them 
 void *consumer(void *voidptr) {
 
@@ -76,10 +75,10 @@ void *consumer(void *voidptr) {
 		// Sleep for the consumer's consume time
 		if (consumer == BlockchainX) {
 
-			usleep(sharedData->xConsumeTime * 1000);
+			usleep(sharedData->xConsumeTime * MILLISECONDS);
 		}
 		else {
-			usleep(sharedData->yConsumeTime * 1000);
+			usleep(sharedData->yConsumeTime * MILLISECONDS);
 		}
 }
 		//uses the precedence constraint

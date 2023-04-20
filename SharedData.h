@@ -20,10 +20,12 @@
 #define DEFAULT_NUM_REQUESTS 100
 #define DEFAULT_NO_DELAY 0
 #define MAX_BITCOIN 5
-#define MAX_ETHEREUM 16
 #define MAX_QUEUE_SIZE 16
 #define BADFLAG 1
 
+#define BITCOIN 0
+#define ETHEREUM 1
+#define MILLISECONDS 1000
 
 
 //make a struct for the shared data
