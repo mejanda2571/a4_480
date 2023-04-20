@@ -22,9 +22,6 @@
 #define MAX_BITCOIN 5
 #define MAX_QUEUE_SIZE 16
 #define BADFLAG 1
-
-#define BITCOIN 0
-#define ETHEREUM 1
 #define MILLISECONDS 1000
 
 
@@ -45,13 +42,13 @@ struct SharedData {
 	int ethProducingTime;
 
 	//keeps track of the number of items produced
-	unsigned int produced[2];
-	unsigned int inRequestQueue[2];
+	unsigned int produced[RequestTypeN];
+	unsigned int inRequestQueue[RequestTypeN];
 	
 	
 	/// TODO : initialize all the ints in main and set it 0
 	//keeps track of the number of items consumes
-	unsigned int consumed[2][2];
+	unsigned int consumed[ConsumerTypeN][RequestTypeN];
 	int consumedItems;
 	int producedItems;
 	int totalItems;
@@ -59,9 +56,6 @@ struct SharedData {
 	//checking if its a bitcoin or not 
 	bool isBitcoin;
 	bool isBlockChainX;
-
-	// Holds the request type in the queue
-	unsigned int inQueue[2];
 
 	//shared buffer for the queue????
 	std::queue<RequestType> broker;

@@ -82,14 +82,14 @@ int main(int argc, char *argv[]) {
 	sharedData.produced[Bitcoin] = 0;
 	sharedData.produced[Ethereum] = 0;
 
-	sharedData.inRequestQueue[BITCOIN] = 0;
-	sharedData.inRequestQueue[ETHEREUM] = 0;
+	sharedData.inRequestQueue[Bitcoin] = 0;
+	sharedData.inRequestQueue[Ethereum] = 0;
 
 	//bitcoin is 0 and ethereum is 1
-	sharedData.consumed[BITCOIN][BITCOIN] = 0;
-	sharedData.consumed[BITCOIN][ETHEREUM] = 0;
-	sharedData.consumed[ETHEREUM][BITCOIN] = 0;
-	sharedData.consumed[ETHEREUM][ETHEREUM] = 0;
+	sharedData.consumed[BlockchainX][Bitcoin] = 0;
+	sharedData.consumed[BlockchainX][Ethereum] = 0;
+	sharedData.consumed[BlockchainY][Bitcoin] = 0;
+	sharedData.consumed[BlockchainY][Ethereum] = 0;
 
 	// Init the queue
 	sharedData.broker = std::queue<RequestType>();
@@ -148,17 +148,10 @@ int main(int argc, char *argv[]) {
 	sem_wait(&sharedData.lastItem);
 
 	// Convert arr[2][2] into *arr[2]
-	unsigned int *arr[RequestTypeN];
-	arr[0] = sharedData.consumed[BITCOIN];
-	arr[1] = sharedData.consumed[ETHEREUM];
+	unsigned int *logging[ConsumerTypeN];
+	logging[BlockchainX] = sharedData.consumed[BlockchainX];
+	logging[BlockchainY] = sharedData.consumed[BlockchainY];
 
 
-	log_production_history(sharedData.produced, arr);
-
-
-	// TO DO: REMOVE MAGIC NUMBERS MAKE THEM INTO #DEFINES
-	// Remove any commented out code
-	// Add comments to the code
-	// For the arrays, instead of 0 and 1 have Bitcoin or Ethereum, check the crypto.h file
-	
+	log_production_history(sharedData.produced, logging);	
 }
